@@ -1,75 +1,65 @@
 import React from 'react';
 
-type Article = [
-  {
-    source: {
-      id: number | null;
-      name: string;
-    };
-    author: string | null;
-    title: string;
-    description: string;
-    url: string;
-    urlToImage: string | null;
-    publishedAt: string;
-    content: string;
-  }
-];
+type Article = {
+  source: {
+    id: number | null;
+    name: string;
+  };
+  author: string | null;
+  title: string;
+  description: string;
+  url: string;
+  urlToImage: string;
+  publishedAt: string;
+  content: string;
+};
 
 type News = {
   status: string;
   totalResults: number;
-  article: Article[];
+  articles: Article[];
 };
 
-type NewsContextProps = {
-  articles: Article[] | undefined;
-  filteredArticles: Article[];
+export type NewsContextProps = {
+  articles: Article[];
   setCategoryFilter: (category: string) => void;
 };
 
-const NewsContext = React.createContext<NewsContextProps | undefined>(
+export const NewsContext = React.createContext<NewsContextProps | undefined>(
   undefined
 );
 export const NewsProvider = ({ children }: { children: React.ReactNode }) => {
-  const [articles, setArticle] = React.useState<Article[]>([]);
+  const [articles, setArticles] = React.useState<Article[]>([]);
   const [categoryFilter, setCategoryFilter] = React.useState<string>('All');
-  const [filteredArticles, setFilteredArticles] = React.useState<Article[]>([]);
 
   React.useEffect(() => {
     const fetchNews = async () => {
       const categoryQuery =
         categoryFilter !== 'All' ? `&category=${categoryFilter}` : '';
-      const response = await fetch(
-        `${import.meta.env.NEWS_API_UR}?country=br${categoryQuery}&apiKey=${
-          import.meta.env.NEWS_API_KEY
-        }`
-      );
-      const data: News = await response.json();
+      try {
+        const response = await fetch(
+          `https://newsapi.org/v2/top-headlines?country=us${categoryQuery}&apiKey=`
+        );
+        const data: News = await response.json();
+        if (data.status === 'ok') {
+          const filteredArticles = data.articles.filter(
+            (article) => article.urlToImage !== null
+          );
 
-      if (categoryQuery !== '') {
-        setFilteredArticles(data.article);
+          setArticles(filteredArticles);
+        }
+      } catch (error) {
+        console.error('Error fetching news:', error);
       }
-
-      setArticle(data.article);
     };
 
     fetchNews();
-  }, [categoryFilter]);
+  }, []);
 
+  if (articles.length === 0) return null;
   return (
-    <NewsContext.Provider
-      value={{ articles, filteredArticles, setCategoryFilter }}
-    >
+    <NewsContext.Provider value={{ articles, setCategoryFilter }}>
       {children}
     </NewsContext.Provider>
   );
-};
-
-export const useNews = (): NewsContextProps => {
-  const context = React.useContext(NewsContext);
-  if (!context) {
-    throw new Error('useNews precisa ser usado com um NewsProvider');
-  }
-  return context;
 };
