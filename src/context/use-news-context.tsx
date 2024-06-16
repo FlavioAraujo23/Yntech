@@ -42,7 +42,7 @@ export const NewsProvider = ({ children }: { children: React.ReactNode }) => {
         categoryFilter !== 'All' ? `&category=${categoryFilter}` : '';
       const response = await fetch(
         `${import.meta.env.NEWS_API_UR}?country=br${categoryQuery}&apiKey=${
-          process.env.NEWS_API_KEY
+          import.meta.env.NEWS_API_KEY
         }`
       );
       const data: News = await response.json();
