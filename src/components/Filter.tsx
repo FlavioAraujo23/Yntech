@@ -1,4 +1,4 @@
-import { useNews } from '../context/use-news-context';
+import { useNews } from '../context/useNews';
 
 const categories = [
   { value: 'business', label: 'Negócios', color: '#9F1515' },
@@ -18,40 +18,40 @@ const Filter = () => {
   };
   return (
     <nav className="flex w-full flex-col items-center md:flex-row md:justify-center space-y-4 md:space-y-0 md:space-x-4 mb-4">
-    <div className="flex items-center space-x-2">
-      <img src="/book-open.svg" alt="book" width={24} height={24} />
-      <select
-        id="category-select"
-        className="text-[#ADADAD] w-40 outline-none p-0"
-        onChange={(e) => handleCategoryChange(e.target.value)}
-      >
-        <option defaultValue={''} disabled selected className='font-bold'>
-          Selecione um filtro:
-        </option>
+      <div className="flex items-center space-x-2">
+        <img src="/book-open.svg" alt="book" width={24} height={24} />
+        <select
+          id="category-select"
+          className="text-[#ADADAD] w-40 outline-none p-0"
+          onChange={(e) => handleCategoryChange(e.target.value)}
+        >
+          <option defaultValue={''} disabled selected className="font-bold">
+            Selecione um filtro:
+          </option>
+          {categories.map((category) => (
+            <option
+              key={category.value}
+              value={category.value}
+              style={{ color: category.color }}
+            >
+              {category.label}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div className="flex flex-wrap justify-center md:justify-start space-x-2">
         {categories.map((category) => (
-          <option
+          <button
             key={category.value}
-            value={category.value}
+            onClick={() => handleCategoryChange(category.value)}
             style={{ color: category.color }}
+            className="border-r-[1px] border-[#ADADAD] px-5"
           >
             {category.label}
-          </option>
+          </button>
         ))}
-      </select>
-    </div>
-    <div className="flex flex-wrap justify-center md:justify-start space-x-2">
-      {categories.map((category) => (
-        <button
-          key={category.value}
-          onClick={() => handleCategoryChange(category.value)}
-          style={{ color: category.color }}
-          className="border-r-[1px] border-[#ADADAD] px-5"
-        >
-          {category.label}
-        </button>
-      ))}
-    </div>
-  </nav>
+      </div>
+    </nav>
   );
 };
 
