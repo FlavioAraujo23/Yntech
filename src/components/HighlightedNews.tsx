@@ -1,9 +1,14 @@
+import { useNavigate } from 'react-router-dom';
 import { useNews } from '../context/useNews';
 import { formatDate } from '../utils/format-date';
+import { Article } from '../context/use-news-context';
 
 const HighlightedNews = () => {
-  const { articles } = useNews();
-
+  const { articles, categoryFilter } = useNews();
+  const navigate = useNavigate();
+  const handleNewsClick = (article: Article) => {
+    navigate('/news', { state: { article } });
+  };
   if (!articles) return null;
 
   return (
@@ -14,7 +19,8 @@ const HighlightedNews = () => {
             <img
               src={articles[0].urlToImage}
               alt={articles[0].title}
-              className="w-[630px] h-[400px] object-cover"
+              className="w-[630px] h-[400px] object-cover cursor-pointer"
+              onClick={() => handleNewsClick(articles[0])}
             />
           )}
           <div
@@ -24,16 +30,20 @@ const HighlightedNews = () => {
                 'linear-gradient(360deg, #030303 -10.26%, rgba(62, 62, 62, 0) 83.71%',
             }}
           >
-            <span className="text-[#01EBFA] font-normal text-base">Geral</span>
-            <h2 className="text-white text-3xl font-bold mt-2">
+            <span className="text-[#01EBFA] font-normal text-base font-montserrat">
+              {categoryFilter ? categoryFilter : 'Geral'}
+            </span>
+            <h2 className="text-white text-3xl font-bold mt-2 font-montserrat">
               {articles[0].title}
             </h2>
             <div className=" flex justify-between items-center mt-1">
               <div className="flex">
                 <img src="./eye.svg" alt="eye icon" />
-                <p className="text-white font-medium text-sm">3000</p>
+                <p className="text-white font-medium text-sm font-montserrat">
+                  3000
+                </p>
               </div>
-              <p className="text-white">Hoje</p>
+              <p className="text-white font-montserrat font-medium">Hoje</p>
             </div>
           </div>
         </div>
@@ -42,7 +52,8 @@ const HighlightedNews = () => {
         {articles.slice(1, 5).map((article, index) => (
           <div
             key={index}
-            className="flex pb-[10px] border-b-2 border-b-[#D7D7D7]"
+            className="flex pb-[10px] border-b-2 border-b-[#D7D7D7] cursor-pointer"
+            onClick={() => handleNewsClick(article)}
           >
             {!!article.urlToImage && (
               <img
@@ -53,15 +64,17 @@ const HighlightedNews = () => {
             )}
             <div className="w-2/3 pl-[10px]">
               <div className="flex justify-between items-center">
-                <p className="text-[#ADADAD] text-xs">
+                <p className="text-[#ADADAD] text-xs font-montserrat font-normal">
                   {formatDate(article.publishedAt)}
                 </p>
-                <p className="text-[#ADADAD] text-xs">
+                <p className="text-[#ADADAD] text-xs font-montserrat font-normal">
                   {index + 1 * 2}min leitura
                 </p>
               </div>
 
-              <h3 className="text-black font-bold text-xs">{article.title}</h3>
+              <h3 className="text-black font-bold text-xs font-montserrat">
+                {article.title}
+              </h3>
             </div>
           </div>
         ))}

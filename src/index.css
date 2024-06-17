@@ -1,13 +1,3 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@layer base {
-  @font-face {
-    font-family: 'MontaguSlab';
-    font-style: normal;
-    font-weight: 700;
-    font-display: swap;
-    src: url('https://fonts.googleapis.com/css2?family=Montagu+Slab:opsz,wght@700&display=swap');
-  }
-}

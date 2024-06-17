@@ -1,6 +1,6 @@
 import React from 'react';
 
-type Article = {
+export type Article = {
   source: {
     id: number | null;
     name: string;
@@ -23,6 +23,7 @@ type News = {
 export type NewsContextProps = {
   articles: Article[];
   setCategoryFilter: (category: string) => void;
+  categoryFilter: string;
 };
 
 export const NewsContext = React.createContext<NewsContextProps | undefined>(
@@ -37,15 +38,16 @@ export const NewsProvider = ({ children }: { children: React.ReactNode }) => {
       const categoryQuery =
         categoryFilter !== 'All' ? `&category=${categoryFilter}` : '';
       try {
-        const response = await fetch(
-          `https://newsapi.org/v2/top-headlines?country=us${categoryQuery}&apiKey=`
-        );
+        const BaseUrl = import.meta.env.NEWS_API_URL;
+        console.log(BaseUrl)
+        const apiKey = import.meta.env.NEWS_API_KEY;
+        const url = `${BaseUrl}${categoryQuery}&apiKey=${apiKey}`;
+        const response = await fetch(url);
         const data: News = await response.json();
         if (data.status === 'ok') {
           const filteredArticles = data.articles.filter(
             (article) => article.urlToImage !== null
           );
-
           setArticles(filteredArticles);
         }
       } catch (error) {
@@ -54,11 +56,13 @@ export const NewsProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     fetchNews();
-  }, []);
+  }, [categoryFilter]);
 
   if (articles.length === 0) return null;
   return (
-    <NewsContext.Provider value={{ articles, setCategoryFilter }}>
+    <NewsContext.Provider
+      value={{ articles, setCategoryFilter, categoryFilter }}
+    >
       {children}
     </NewsContext.Provider>
   );

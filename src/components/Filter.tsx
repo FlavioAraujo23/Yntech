@@ -17,7 +17,7 @@ const Filter = () => {
     setCategoryFilter(category);
   };
   return (
-    <nav className="flex w-full flex-col items-center md:flex-row md:justify-center space-y-4 md:space-y-0 md:space-x-4 mb-4">
+    <nav className="flex w-full flex-col items-center md:flex-row md:justify-center space-y-4 md:space-y-0 md:space-x-4 my-4">
       <div className="flex items-center space-x-2">
         <img src="/book-open.svg" alt="book" width={24} height={24} />
         <select
@@ -25,7 +25,12 @@ const Filter = () => {
           className="text-[#ADADAD] w-40 outline-none p-0"
           onChange={(e) => handleCategoryChange(e.target.value)}
         >
-          <option defaultValue={''} disabled selected className="font-bold">
+          <option
+            defaultValue={''}
+            disabled
+            selected
+            className="font-bold font-montserrat"
+          >
             Selecione um filtro:
           </option>
           {categories.map((category) => (
@@ -33,6 +38,7 @@ const Filter = () => {
               key={category.value}
               value={category.value}
               style={{ color: category.color }}
+              className="font-montserrat"
             >
               {category.label}
             </option>
@@ -45,7 +51,7 @@ const Filter = () => {
             key={category.value}
             onClick={() => handleCategoryChange(category.value)}
             style={{ color: category.color }}
-            className="border-r-[1px] border-[#ADADAD] px-5"
+            className="border-r-[1px] border-[#ADADAD] px-5 font-montserrat"
           >
             {category.label}
           </button>
