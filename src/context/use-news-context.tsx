@@ -39,9 +39,8 @@ export const NewsProvider = ({ children }: { children: React.ReactNode }) => {
         categoryFilter !== 'All' ? `&category=${categoryFilter}` : '';
       try {
         const BaseUrl = import.meta.env.VITE_NEWS_API_URL;
-        console.log(BaseUrl)
         const apiKey = import.meta.env.VITE_NEWS_API_KEY;
-        const url = `${BaseUrl}${categoryQuery}&apiKey=${apiKey}`;
+        const url = `${BaseUrl}?country=us${categoryQuery}&apiKey=${apiKey}`;
         const response = await fetch(url);
         const data: News = await response.json();
         if (data.status === 'ok') {
